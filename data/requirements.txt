@@ -1,6 +1,0 @@
-fastapi
-uvicorn[Standard]
-scikit-learn
-numpy
-pandas
-joblibgit
