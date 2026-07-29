@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Portuguese Bank Marketing Campaign Prediction</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+   <style>
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(85,170,255,.45), transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(0,255,170,.35), transparent 35%),
+        linear-gradient(135deg,#4b6cb7 0%,#56ccf2 40%,#62d2a2 100%);
+    position:relative;
+}
+
+/* Soft blur overlay */
+body::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:inherit;
+    filter:blur(35px);
+    transform:scale(1.1);
+    z-index:-2;
+}
+
+/* Floating blobs */
+body::after{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:
+        radial-gradient(circle at 15% 30%, rgba(255,255,255,.18), transparent 22%),
+        radial-gradient(circle at 85% 75%, rgba(255,255,255,.12), transparent 20%),
+        radial-gradient(circle at 60% 15%, rgba(255,255,255,.08), transparent 18%);
+    animation:floatBG 12s ease-in-out infinite alternate;
+    z-index:-1;
+}
+
+@keyframes floatBG{
+    from{
+        transform:translateY(-15px) scale(1);
+    }
+    to{
+        transform:translateY(15px) scale(1.05);
+    }
+}
+
+/* Glass Container */
+.container{
+    width:90%;
+    max-width:1200px;
+    padding:40px;
+    border-radius:25px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.2);
+    box-shadow:
+        0 25px 50px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+/* Headings */
+h1{
+    color:#fff;
+    font-size:2.5rem;
+    font-weight:700;
+    text-align:center;
+    margin-bottom:10px;
+}
+
+p{
+    color:rgba(255,255,255,.85);
+    text-align:center;
+    margin-bottom:35px;
+}
+
+/* Form Controls */
+input,
+select{
+    width:100%;
+    padding:14px 18px;
+    border:none;
+    outline:none;
+    border-radius:12px;
+    background:rgba(255,255,255,.92);
+    color:#333;
+    font-size:15px;
+    transition:.3s;
+}
+
+input:focus,
+select:focus{
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(255,255,255,.35);
+}
+
+/* Labels */
+label{
+    display:block;
+    color:#fff;
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:500;
+}
+
+/* Button */
+button{
+    display:block;
+    margin:30px auto 0;
+    padding:14px 42px;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(90deg,#ff9f43,#ff7b00);
+    color:#fff;
+    font-size:17px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.35s;
+    box-shadow:0 12px 25px rgba(255,140,0,.35);
+}
+
+button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 18px 35px rgba(255,140,0,.45);
+}
+
+/* Prediction Result */
+.result{
+    margin-top:25px;
+    text-align:center;
+    color:#fff;
+    font-size:20px;
+    font-weight:600;
+}
+
+/* Responsive */
+@media(max-width:768px){
+
+    .container{
+        padding:25px;
+    }
+
+    h1{
+        font-size:2rem;
+    }
+
+}
+</style>
+
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+
+    background:linear-gradient(-45deg,#4f46e5,#06b6d4,#3b82f6,#7c3aed);
+    background-size:400% 400%;
+    animation:gradientBG 15s ease infinite;
+
+}
+
+
+
+.blob{
+
+    position:fixed;
+
+    border-radius:50%;
+
+    filter:blur(90px);
+
+    opacity:.35;
+
+    z-index:-1;
+
+    animation:float 12s ease-in-out infinite;
+
+}
+
+.blob1{
+
+    width:350px;
+    height:350px;
+
+    background:#00e5ff;
+
+    top:-80px;
+    left:-80px;
+
+}
+
+.blob2{
+
+    width:300px;
+    height:300px;
+
+    background:#00ff95;
+
+    bottom:-80px;
+    right:-60px;
+
+    animation-delay:2s;
+
+}
+
+.blob3{
+
+    width:250px;
+    height:250px;
+
+    background:#4f8cff;
+
+    top:45%;
+    left:45%;
+
+    animation-delay:4s;
+
+}
+
+@keyframes float{
+
+    0%{
+
+        transform:translate(0,0) scale(1);
+
+    }
+
+    25%{
+
+        transform:translate(40px,-30px) scale(1.08);
+
+    }
+
+    50%{
+
+        transform:translate(-20px,40px) scale(.95);
+
+    }
+
+    75%{
+
+        transform:translate(25px,-20px) scale(1.05);
+
+    }
+
+    100%{
+
+        transform:translate(0,0) scale(1);
+
+    }
+
+}
+
+.header{
+    background:linear-gradient(90deg,#0d6efd,#0056d6);
+    color:white;
+    padding:25px;
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.card{
+    border:none;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+.form-label{
+    font-weight:600;
+}
+
+.btn-primary{
+    width:220px;
+    height:55px;
+    font-size:20px;
+}
+
+#resultCard{
+    display:none;
+}
+
+.success{
+    color:green;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.fail{
+    color:red;
+    font-size:28px;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h2>Portuguese Bank Marketing Campaign Prediction</h2>
+<p class="mb-0">Predict whether a customer will subscribe to a Bank Term Deposit</p>
+</div>
+
+<div class="container">
+
+<div class="card p-4">
+
+<div class="row g-3">
+
+<div class="col-md-4">
+<label class="form-label">Age</label>
+<input type="number" id="age" class="form-control">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Job</label>
+<select id="job" class="form-select">
+<option>admin.</option>
+<option>blue-collar</option>
+<option>entrepreneur</option>
+<option>housemaid</option>
+<option>management</option>
+<option>retired</option>
+<option>self-employed</option>
+<option>services</option>
+<option>student</option>
+<option>technician</option>
+<option>unemployed</option>
+<option>unknown</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Marital Status</label>
+<select id="marital" class="form-select">
+<option>married</option>
+<option>single</option>
+<option>divorced</option>
+<option>unknown</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Education</label>
+<select id="education" class="form-select">
+<option>university_degree</option>
+<option>high.school</option>
+<option>basic.9y</option>
+<option>professional.course</option>
+<option>basic.4y</option>
+<option>basic.6y</option>
+<option>unknown</option>
+<option>illiterate</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Credit Default</label>
+<select id="default" class="form-select">
+<option>no</option>
+<option>unknown</option>
+<option>yes</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Housing Loan</label>
+<select id="housing" class="form-select">
+<option>yes</option>
+<option>no</option>
+<option>unknown</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Personal Loan</label>
+<select id="loan" class="form-select">
+<option>no</option>
+<option>yes</option>
+<option>unknown</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Contact</label>
+<select id="contact" class="form-select">
+<option>cellular</option>
+<option>telephone</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Month</label>
+<select id="month" class="form-select">
+<option>may</option>
+<option>jul</option>
+<option>aug</option>
+<option>jun</option>
+<option>nov</option>
+<option>apr</option>
+<option>oct</option>
+<option>sep</option>
+<option>mar</option>
+<option>dec</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Day of Week</label>
+<select id="day_of_week" class="form-select">
+<option>mon</option>
+<option>tue</option>
+<option>wed</option>
+<option>thu</option>
+<option>fri</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Campaign</label>
+<input type="number" id="campaign" class="form-control">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Pdays</label>
+<input type="number" id="pdays" class="form-control">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Previous</label>
+<input type="number" id="previous" class="form-control">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Previous Outcome</label>
+<select id="poutcome" class="form-select">
+<option>nonexistent</option>
+<option>failure</option>
+<option>success</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Employment Variation Rate</label>
+<input type="number" step="any" id="emp_var_rate" class="form-control">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Consumer Price Index</label>
+<input type="number" step="any" id="cons_price_idx" class="form-control">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Consumer Confidence Index</label>
+<input type="number" step="any" id="cons_conf_idx" class="form-control">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Euribor3m</label>
+<input type="number" step="any" id="euribor3m" class="form-control">
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Number of Employees</label>
+<input type="number" step="any" id="nr_employed" class="form-control">
+</div>
+
+</div>
+
+<div class="text-center mt-5">
+<button class="btn btn-primary" onclick="predict()">Predict</button>
+</div>
+
+<div class="card mt-5 p-4 text-center" id="resultCard">
+<h3>Prediction Result</h3>
+<h2 id="predictionText"></h2>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+async function predict(){
+
+const data={
+
+age:Number(document.getElementById("age").value),
+job:document.getElementById("job").value,
+marital:document.getElementById("marital").value,
+education:document.getElementById("education").value,
+default:document.getElementById("default").value,
+housing:document.getElementById("housing").value,
+loan:document.getElementById("loan").value,
+contact:document.getElementById("contact").value,
+month:document.getElementById("month").value,
+day_of_week:document.getElementById("day_of_week").value,
+campaign:Number(document.getElementById("campaign").value),
+pdays:Number(document.getElementById("pdays").value),
+previous:Number(document.getElementById("previous").value),
+poutcome:document.getElementById("poutcome").value,
+emp_var_rate:Number(document.getElementById("emp_var_rate").value),
+cons_price_idx:Number(document.getElementById("cons_price_idx").value),
+cons_conf_idx:Number(document.getElementById("cons_conf_idx").value),
+euribor3m:Number(document.getElementById("euribor3m").value),
+nr_employed:Number(document.getElementById("nr_employed").value)
+
+};
+
+try{
+
+const response=await fetch("/predict",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify(data)
+
+});
+
+const result=await response.json();
+
+document.getElementById("resultCard").style.display="block";
+
+if(result.label==="YES"){
+
+document.getElementById("predictionText").className="success";
+document.getElementById("predictionText").innerHTML="✔ Customer WILL Subscribe (YES)";
+
+}
+else{
+
+document.getElementById("predictionText").className="fail";
+document.getElementById("predictionText").innerHTML="✖ Customer WILL NOT Subscribe (NO)";
+
+}
+
+}catch(err){
+
+alert("Prediction failed.\n\n"+err);
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
